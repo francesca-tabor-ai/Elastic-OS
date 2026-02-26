@@ -1,5 +1,5 @@
 // Auth helpers and role checks for ElasticOS
-import type { UserRole } from "@elastic-os/db";
+import type { UserRole } from "@elastic-os/shared";
 
 // Base session user - use for generic auth checks
 export type SessionUser = {

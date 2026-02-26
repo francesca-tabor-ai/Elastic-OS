@@ -1,16 +1,14 @@
-// Shared types and constants for ElasticOS
-import type { UserRole, AffiliationRecordType } from "@elastic-os/db";
-
-export type { UserRole, AffiliationRecordType };
-
+// Shared types and constants for ElasticOS (defined locally for Vercel/module resolution compatibility)
 export const USER_ROLES = ["WORKER", "EMPLOYER", "GOVERNMENT", "ADMIN"] as const;
-export type UserRoleType = (typeof USER_ROLES)[number];
+export type UserRole = (typeof USER_ROLES)[number];
+export type UserRoleType = UserRole;
 
 /** Roles that can self-register (ADMIN is created by other admins or seed) */
 export const REGISTRABLE_ROLES = ["WORKER", "EMPLOYER", "GOVERNMENT"] as const;
 export type RegistrableRoleType = (typeof REGISTRABLE_ROLES)[number];
 
 export const AFFILIATION_RECORD_TYPES = ["ACTIVE", "ADJUSTED", "TERMINATED", "REACTIVATED"] as const;
+export type AffiliationRecordType = (typeof AFFILIATION_RECORD_TYPES)[number];
 
 // Engagement intensity bounds
 export const MIN_ENGAGEMENT_INTENSITY = 0;

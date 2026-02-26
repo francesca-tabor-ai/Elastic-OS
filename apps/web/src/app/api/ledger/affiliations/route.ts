@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { createOrAdjustAffiliation } from "@/lib/ledger";
 import { AFFILIATION_RECORD_TYPES } from "@elastic-os/shared";
-import type { AffiliationRecordType } from "@elastic-os/db";
+import type { AffiliationRecordType } from "@elastic-os/shared";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);

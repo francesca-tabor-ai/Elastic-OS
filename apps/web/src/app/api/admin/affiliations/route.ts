@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@elastic-os/db";
 import { getAdminSession } from "@/lib/admin";
 import { createOrAdjustAffiliation } from "@/lib/ledger";
-import { AFFILIATION_RECORD_TYPES } from "@elastic-os/shared";
-import type { AffiliationRecordType } from "@elastic-os/db";
+import { AFFILIATION_RECORD_TYPES, type AffiliationRecordType } from "@elastic-os/shared";
 
 export async function GET() {
   try {

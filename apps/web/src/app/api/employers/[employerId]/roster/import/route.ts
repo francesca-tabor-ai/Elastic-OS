@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@elastic-os/db";
 import { createOrAdjustAffiliation } from "@/lib/ledger";
-import { AffiliationRecordType } from "@elastic-os/db";
+import { AFFILIATION_RECORD_TYPES } from "@elastic-os/shared";
 
 function parseCSV(text: string): string[][] {
   const lines = text.trim().split(/\r?\n/);
@@ -111,7 +111,7 @@ export async function POST(
         workerId,
         employerId,
         engagementIntensity: Math.min(1, Math.max(0, engagement)),
-        recordType: AffiliationRecordType.ACTIVE,
+        recordType: AFFILIATION_RECORD_TYPES[0],
         createdBy: session.user.id,
         metadata: { source: "csv_import", row: i + 1 },
       });

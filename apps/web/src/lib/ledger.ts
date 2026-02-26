@@ -1,5 +1,5 @@
 import { prisma } from "@elastic-os/db";
-import { AffiliationRecordType } from "@elastic-os/db";
+import type { AffiliationRecordType } from "@elastic-os/shared";
 import { MIN_ENGAGEMENT_INTENSITY, MAX_ENGAGEMENT_INTENSITY } from "@elastic-os/shared";
 import { Decimal } from "@prisma/client/runtime/library";
 

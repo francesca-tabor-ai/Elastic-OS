@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@elastic-os/db";
 import { REGISTRABLE_ROLES } from "@elastic-os/shared";
-import type { UserRole } from "@elastic-os/db";
+import type { UserRole } from "@elastic-os/shared";
 
 const SALT_ROUNDS = 10;
 
