@@ -53,7 +53,7 @@ export async function createOrAdjustAffiliation(params: {
         effectiveTo: recordType === "TERMINATED" ? now : null,
         recordType,
         createdBy,
-        metadata: metadata ?? undefined,
+        metadata: (metadata ?? undefined) as object | undefined,
       },
     });
 

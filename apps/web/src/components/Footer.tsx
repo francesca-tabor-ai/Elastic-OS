@@ -10,31 +10,31 @@ export function Footer() {
         <nav className="flex items-center gap-6">
           <Link
             href="/contact"
-            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors"
+            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors duration-normal"
           >
             Contact
           </Link>
           <Link
             href="/e-book"
-            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors"
+            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors duration-normal"
           >
             E-Book
           </Link>
           <Link
             href="/marketplace"
-            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors"
+            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors duration-normal"
           >
             Marketplace
           </Link>
           <Link
             href="/marketplace/apply"
-            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors"
+            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors duration-normal"
           >
             Build an app
           </Link>
           <Link
             href="/api-docs"
-            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors"
+            className="text-sm font-medium text-accent hover:text-accent-dark transition-colors duration-normal"
           >
             API Docs
           </Link>

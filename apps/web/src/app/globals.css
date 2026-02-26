@@ -62,11 +62,18 @@
   --leading-body: 1.6;
   --leading-tight: 1.35;
   --leading-relaxed: 1.75;
+
+  /* Motion — subtle micro-interactions */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 @layer base {
   html {
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    scroll-behavior: smooth;
   }
 
   body {
@@ -114,5 +121,51 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Micro-interactions — buttons */
+  .btn-interactive {
+    transition: transform var(--duration-fast) var(--ease-out),
+      background-color var(--duration-normal),
+      box-shadow var(--duration-normal);
+  }
+  .btn-interactive:hover {
+    transform: translateY(-1px);
+  }
+  .btn-interactive:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  /* Micro-interactions — cards */
+  .card-interactive {
+    transition: transform var(--duration-normal) var(--ease-out),
+      box-shadow var(--duration-normal),
+      border-color var(--duration-normal);
+  }
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 8px 24px -4px rgb(0 0 0 / 0.06);
+  }
+
+  /* Focus visible — accessible keyboard focus */
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Fade-in for lazy-loaded content */
+  .animate-fade-in {
+    animation: fadeIn var(--duration-slow) var(--ease-out) forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

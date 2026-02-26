@@ -63,9 +63,22 @@ const config: Config = {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        fadeIn: {
+          "0%": { opacity: "0", transform: "translateY(6px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         scroll: "scroll 30s linear infinite",
+        "fade-in": "fadeIn 0.3s cubic-bezier(0.33, 1, 0.68, 1) forwards",
+      },
+      transitionDuration: {
+        fast: "150ms",
+        normal: "200ms",
+        slow: "300ms",
+      },
+      transitionTimingFunction: {
+        "ease-out-smooth": "cubic-bezier(0.33, 1, 0.68, 1)",
       },
     },
   },

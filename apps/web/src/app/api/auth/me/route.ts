@@ -24,8 +24,8 @@ export async function GET() {
     role: user.role,
     workerId: user.worker?.id,
     employerId: user.employer?.id,
-    govtIdVerified: !!user.worker?.govtIdVerifiedAt ?? !!user.employer?.govtIdVerifiedAt,
-    mfaEnabled: user.worker?.mfaEnabled ?? user.employer?.mfaEnabled ?? false,
+    govtIdVerified: !!user.worker?.govtIdVerifiedAt,
+    mfaEnabled: user.worker?.mfaEnabled ?? false,
     legalEntityVerified: !!user.employer?.legalEntityVerifiedAt,
     companiesHouseNumber: user.employer?.companiesHouseNumber,
   });

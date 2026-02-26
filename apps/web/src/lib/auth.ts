@@ -64,10 +64,11 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        token.workerId = user.workerId;
-        token.employerId = user.employerId;
+        const u = user as { id: string; role: UserRole; workerId?: string; employerId?: string };
+        token.id = u.id;
+        token.role = u.role;
+        token.workerId = u.workerId;
+        token.employerId = u.employerId;
       }
       return token;
     },

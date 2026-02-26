@@ -46,7 +46,7 @@ export default async function WorkerProfilePage() {
 
         <WorkerProfileClient
           workerId={session.user.workerId}
-          initialProfile={profile}
+          initialProfile={JSON.parse(JSON.stringify(profile))}
         />
       </div>
     </main>

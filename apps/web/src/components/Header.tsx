@@ -12,37 +12,37 @@ export function Header() {
         <nav className="flex items-center gap-8">
           <Link
             href="/"
-            className="text-sm font-medium text-foreground-muted transition hover:text-foreground"
+            className="text-sm font-medium text-foreground-muted transition-colors duration-normal hover:text-foreground"
           >
             Product
           </Link>
           <Link
             href="/pricing"
-            className="text-sm font-medium text-foreground-muted transition hover:text-foreground"
+            className="text-sm font-medium text-foreground-muted transition-colors duration-normal hover:text-foreground"
           >
             Pricing
           </Link>
           <Link
             href="/case-studies"
-            className="text-sm font-medium text-foreground-muted transition hover:text-foreground"
+            className="text-sm font-medium text-foreground-muted transition-colors duration-normal hover:text-foreground"
           >
             Case Studies
           </Link>
           <Link
             href="/contact"
-            className="text-sm font-medium text-foreground-muted transition hover:text-foreground"
+            className="text-sm font-medium text-foreground-muted transition-colors duration-normal hover:text-foreground"
           >
             Contact
           </Link>
           <Link
             href="/marketplace"
-            className="text-sm font-medium text-foreground-muted transition hover:text-foreground"
+            className="text-sm font-medium text-foreground-muted transition-colors duration-normal hover:text-foreground"
           >
             Marketplace
           </Link>
           <Link
             href="/login"
-            className="rounded-ui bg-accent px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+            className="rounded-ui bg-accent px-4 py-2 text-sm font-medium text-white btn-interactive focus-ring hover:bg-accent-dark"
           >
             Get Started
           </Link>
