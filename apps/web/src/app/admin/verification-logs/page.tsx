@@ -3,10 +3,15 @@ import { prisma, type VerificationLog } from "@elastic-os/db";
 export const dynamic = "force-dynamic";
 
 export default async function AdminVerificationLogsPage() {
-  const logs = await prisma.verificationLog.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 500,
-  });
+  let logs: VerificationLog[] = [];
+  try {
+    logs = await prisma.verificationLog.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 500,
+    });
+  } catch {
+    // DB may be unavailable at build time (e.g. Vercel without DATABASE_URL)
+  }
 
   return (
     <div className="space-y-4">
