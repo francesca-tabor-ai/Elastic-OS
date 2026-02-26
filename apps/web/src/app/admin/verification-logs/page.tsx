@@ -1,9 +1,9 @@
-import { prisma, type VerificationLog } from "@elastic-os/db";
+import { prisma } from "@elastic-os/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminVerificationLogsPage() {
-  let logs: VerificationLog[] = [];
+  let logs: Awaited<ReturnType<typeof prisma.verificationLog.findMany>> = [];
   try {
     logs = await prisma.verificationLog.findMany({
       orderBy: { createdAt: "desc" },
@@ -31,7 +31,7 @@ export default async function AdminVerificationLogsPage() {
               </tr>
             </thead>
             <tbody>
-              {logs.map((log: VerificationLog) => (
+              {logs.map((log) => (
                 <tr key={log.id} className="border-t border-border">
                   <td className="px-4 py-3">{log.entityType}</td>
                   <td className="px-4 py-3">{log.entityId ?? "—"}</td>
