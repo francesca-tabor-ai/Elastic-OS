@@ -65,6 +65,14 @@ export default async function DashboardPage() {
               Workforce Roster
             </Link>
           )}
+          {session.user.role === "ADMIN" && (
+            <Link
+              href="/admin"
+              className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
+            >
+              Admin Dashboard
+            </Link>
+          )}
         </div>
       </div>
     </main>

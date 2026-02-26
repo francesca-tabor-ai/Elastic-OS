@@ -15,6 +15,7 @@ enum UserRole {
   WORKER
   EMPLOYER
   GOVERNMENT
+  ADMIN
 }
 
 model User {

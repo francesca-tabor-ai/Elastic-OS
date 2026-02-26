@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@elastic-os/db";
-import { USER_ROLES } from "@elastic-os/shared";
+import { REGISTRABLE_ROLES } from "@elastic-os/shared";
 import type { UserRole } from "@elastic-os/db";
 
 const SALT_ROUNDS = 10;
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!USER_ROLES.includes(role)) {
+    if (!REGISTRABLE_ROLES.includes(role)) {
       return NextResponse.json(
         { error: "Invalid role. Must be WORKER, EMPLOYER, or GOVERNMENT" },
         { status: 400 }

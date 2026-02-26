@@ -3,8 +3,12 @@ import type { UserRole, AffiliationRecordType } from "@elastic-os/db";
 
 export type { UserRole, AffiliationRecordType };
 
-export const USER_ROLES = ["WORKER", "EMPLOYER", "GOVERNMENT"] as const;
+export const USER_ROLES = ["WORKER", "EMPLOYER", "GOVERNMENT", "ADMIN"] as const;
 export type UserRoleType = (typeof USER_ROLES)[number];
+
+/** Roles that can self-register (ADMIN is created by other admins or seed) */
+export const REGISTRABLE_ROLES = ["WORKER", "EMPLOYER", "GOVERNMENT"] as const;
+export type RegistrableRoleType = (typeof REGISTRABLE_ROLES)[number];
 
 export const AFFILIATION_RECORD_TYPES = ["ACTIVE", "ADJUSTED", "TERMINATED", "REACTIVATED"] as const;
 
