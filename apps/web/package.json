@@ -12,6 +12,7 @@
     "@elastic-os/auth": "*",
     "@elastic-os/db": "*",
     "@elastic-os/shared": "*",
+    "@prisma/client": "^5.22.0",
     "@next-auth/prisma-adapter": "^1.0.7",
     "bcryptjs": "^2.4.3",
     "next": "14.2.18",
