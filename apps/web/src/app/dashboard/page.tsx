@@ -43,6 +43,12 @@ export default async function DashboardPage() {
         </div>
 
         <div className="mt-8 grid gap-4">
+          <Link
+            href="/marketplace"
+            className="p-4 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+          >
+            App Marketplace
+          </Link>
           {session.user.role === "WORKER" && (
             <Link
               href="/worker/profile"
