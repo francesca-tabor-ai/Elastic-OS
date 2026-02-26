@@ -1,4 +1,4 @@
-import { prisma } from "@elastic-os/db";
+import { prisma, type VerificationLog } from "@elastic-os/db";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +26,7 @@ export default async function AdminVerificationLogsPage() {
               </tr>
             </thead>
             <tbody>
-              {logs.map((log) => (
+              {logs.map((log: VerificationLog) => (
                 <tr key={log.id} className="border-t border-border">
                   <td className="px-4 py-3">{log.entityType}</td>
                   <td className="px-4 py-3">{log.entityId ?? "—"}</td>
