@@ -41,6 +41,17 @@ Open [http://localhost:3000](http://localhost:3000).
 openssl rand -base64 32
 ```
 
+### Deploy to Railway (PostgreSQL)
+
+1. Create a [Railway](https://railway.app) project and add **PostgreSQL** from the database templates.
+2. Add a new **Web Service** and connect your GitHub repo. Deploy from the **root** (no root directory).
+3. Set environment variables in the Railway dashboard:
+   - `DATABASE_URL` — Use the reference: `${{Postgres.DATABASE_URL}}` (auto-filled when Postgres is linked)
+   - `NEXTAUTH_URL` — Your app URL (e.g. `https://your-app.railway.app`) — set after generating a domain
+   - `NEXTAUTH_SECRET` — Generate with `openssl rand -base64 32`
+4. Generate a public domain for your service in Railway Settings.
+5. The `railway.json` config handles build (Prisma schema push + Turbo build) and start (Next.js).
+
 ## Project Structure
 
 ```
