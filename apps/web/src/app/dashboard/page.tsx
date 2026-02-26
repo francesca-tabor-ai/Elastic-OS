@@ -17,13 +17,13 @@ export default async function DashboardPage() {
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <Link
             href="/api/auth/signout"
-            className="text-sm text-gray-600 dark:text-gray-400 hover:underline"
+            className="text-sm text-foreground-muted dark:text-foreground-muted hover:underline"
           >
             Sign out
           </Link>
         </div>
 
-        <div className="space-y-4 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+        <div className="space-y-4 p-4 rounded-ui border border-border dark:border-border">
           <p>
             <span className="font-medium">Email:</span> {session.user.email}
           </p>
@@ -45,14 +45,14 @@ export default async function DashboardPage() {
         <div className="mt-8 grid gap-4">
           <Link
             href="/marketplace"
-            className="p-4 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+            className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
           >
             App Marketplace
           </Link>
           {session.user.role === "WORKER" && (
             <Link
               href="/worker/profile"
-              className="p-4 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+              className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
             >
               Worker Profile
             </Link>
@@ -60,7 +60,7 @@ export default async function DashboardPage() {
           {session.user.role === "EMPLOYER" && (
             <Link
               href="/employer/roster"
-              className="p-4 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+              className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
             >
               Workforce Roster
             </Link>

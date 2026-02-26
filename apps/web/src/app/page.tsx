@@ -7,28 +7,28 @@ export default function HomePage() {
     <>
       <Header />
       <main>
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-slate-900 px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(13,148,136,0.3),transparent)]" />
+        {/* Hero — white-dominant, gradient accent on headline only */}
+        <section className="relative overflow-hidden bg-background px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+          <div className="absolute inset-0 bg-gradient-accent opacity-[0.03]" aria-hidden />
           <div className="relative mx-auto max-w-4xl text-center">
-            <h1 className="font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-headline">
               Employment that bends.
               <br />
-              <span className="text-accent-light">Not breaks.</span>
+              <span className="gradient-accent-text">Not breaks.</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-300">
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground-muted leading-relaxed">
               The infrastructure for the modern workforce. Verify identities, track engagement, and build trust—at scale.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/pricing"
-                className="rounded-lg bg-accent-light px-6 py-3 text-base font-medium text-slate-900 transition hover:bg-teal-300"
+                className="rounded-ui bg-accent px-6 py-3 text-base font-medium text-white transition hover:bg-accent-dark shadow-subtle"
               >
                 View Pricing
               </Link>
               <Link
                 href="/case-studies"
-                className="rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-white transition hover:border-slate-500 hover:bg-slate-800"
+                className="rounded-ui border border-border px-6 py-3 text-base font-medium text-foreground transition hover:border-foreground-subtle hover:bg-surface"
               >
                 See Case Studies
               </Link>
@@ -36,40 +36,40 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Who it's for */}
-        <section className="border-b border-slate-200 bg-white px-4 py-20 dark:border-slate-800 dark:bg-slate-900/30 sm:px-6 lg:px-8">
+        {/* Who it's for — cool greys, lots of white space */}
+        <section className="border-b border-border bg-background-alt px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <h2 className="font-display text-center text-3xl font-semibold text-slate-900 dark:text-white sm:text-4xl">
+            <h2 className="font-display text-center text-3xl font-bold text-foreground sm:text-4xl leading-headline">
               Built for who work actually works
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-center text-slate-600 dark:text-slate-400">
+            <p className="mx-auto mt-4 max-w-2xl text-center text-foreground-muted leading-relaxed">
               Your workforce isn&apos;t binary. Neither should your infrastructure.
             </p>
             <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-8 dark:border-slate-700 dark:bg-slate-800/30">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">Employers</div>
-                <h3 className="mt-4 font-display text-xl font-semibold text-slate-900 dark:text-white">
+              <div className="rounded-ui-lg border border-border bg-white p-8 shadow-subtle">
+                <div className="flex h-12 w-12 items-center justify-center rounded-ui bg-accent/10 text-accent font-semibold">Employers</div>
+                <h3 className="mt-4 font-display text-xl font-bold text-foreground leading-tight">
                   Employers with flexible talent
                 </h3>
-                <p className="mt-2 text-slate-600 dark:text-slate-400">
+                <p className="mt-2 text-foreground-muted leading-relaxed">
                   Seasonal demand, project-based work, gig workers, part-time and contract staff. You need one system of record that reflects reality—not just employed or not.
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-8 dark:border-slate-700 dark:bg-slate-800/30">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">Workers</div>
-                <h3 className="mt-4 font-display text-xl font-semibold text-slate-900 dark:text-white">
+              <div className="rounded-ui-lg border border-border bg-white p-8 shadow-subtle">
+                <div className="flex h-12 w-12 items-center justify-center rounded-ui bg-accent/10 text-accent font-semibold">Workers</div>
+                <h3 className="mt-4 font-display text-xl font-bold text-foreground leading-tight">
                   Workers with portfolio careers
                 </h3>
-                <p className="mt-2 text-slate-600 dark:text-slate-400">
+                <p className="mt-2 text-foreground-muted leading-relaxed">
                   Multiple engagements, variable hours, side projects. You need a trusted, portable record of work history and verified skills that travels with you.
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-8 dark:border-slate-700 dark:bg-slate-800/30 sm:col-span-2 lg:col-span-1">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">Gov</div>
-                <h3 className="mt-4 font-display text-xl font-semibold text-slate-900 dark:text-white">
+              <div className="rounded-ui-lg border border-border bg-white p-8 shadow-subtle sm:col-span-2 lg:col-span-1">
+                <div className="flex h-12 w-12 items-center justify-center rounded-ui bg-accent/10 text-accent font-semibold">Gov</div>
+                <h3 className="mt-4 font-display text-xl font-bold text-foreground leading-tight">
                   Compliance & regulators
                 </h3>
-                <p className="mt-2 text-slate-600 dark:text-slate-400">
+                <p className="mt-2 text-foreground-muted leading-relaxed">
                   Audit trails, verification, and alignment with evolving employment models—without fragmented, paper-based processes.
                 </p>
               </div>
@@ -78,12 +78,12 @@ export default function HomePage() {
         </section>
 
         {/* Pain points */}
-        <section className="border-b border-slate-200 px-4 py-20 dark:border-slate-800 sm:px-6 lg:px-8">
+        <section className="border-b border-border px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <h2 className="font-display text-center text-3xl font-semibold text-slate-900 dark:text-white sm:text-4xl">
+            <h2 className="font-display text-center text-3xl font-bold text-foreground sm:text-4xl leading-headline">
               Sound familiar?
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-center text-slate-600 dark:text-slate-400">
+            <p className="mx-auto mt-4 max-w-2xl text-center text-foreground-muted leading-relaxed">
               The pain points of modern employment infrastructure
             </p>
             <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -95,10 +95,10 @@ export default function HomePage() {
                 { title: "Trust deficit", desc: "Verifying work history and credentials means costly, slow manual checks." },
                 { title: "Binary thinking", desc: "Systems assume full-time vs part-time. Reality is continuous and fluid." },
               ].map((item) => (
-                <div key={item.title} className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900/30">
+                <div key={item.title} className="rounded-ui-lg border border-border bg-white p-6 shadow-subtle">
                   <p className="text-sm font-medium text-accent">Pain point</p>
-                  <h3 className="mt-2 font-display text-lg font-semibold text-slate-900 dark:text-white">{item.title}</h3>
-                  <p className="mt-2 text-slate-600 dark:text-slate-400">{item.desc}</p>
+                  <h3 className="mt-2 font-display text-lg font-bold text-foreground leading-tight">{item.title}</h3>
+                  <p className="mt-2 text-foreground-muted leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -106,12 +106,12 @@ export default function HomePage() {
         </section>
 
         {/* How we solve it */}
-        <section className="border-b border-slate-200 bg-slate-50 px-4 py-20 dark:border-slate-800 dark:bg-slate-900/50 sm:px-6 lg:px-8">
+        <section className="border-b border-border bg-surface px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <h2 className="font-display text-center text-3xl font-semibold text-slate-900 dark:text-white sm:text-4xl">
+            <h2 className="font-display text-center text-3xl font-bold text-foreground sm:text-4xl leading-headline">
               How ElasticOS solves it
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-center text-slate-600 dark:text-slate-400">
+            <p className="mx-auto mt-4 max-w-2xl text-center text-foreground-muted leading-relaxed">
               Purpose-built for continuous, elastic employment
             </p>
             <div className="mt-16 space-y-12">
@@ -138,12 +138,12 @@ export default function HomePage() {
                 },
               ].map((item, i) => (
                 <div key={item.title} className="flex flex-col gap-6 sm:flex-row sm:items-start">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-white font-display text-xl font-bold">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-ui-lg bg-accent text-white font-display text-xl font-bold tabular-nums">
                     {i + 1}
                   </div>
                   <div>
-                    <h3 className="font-display text-xl font-semibold text-slate-900 dark:text-white">{item.title}</h3>
-                    <p className="mt-2 text-slate-600 dark:text-slate-400">{item.desc}</p>
+                    <h3 className="font-display text-xl font-bold text-foreground leading-tight">{item.title}</h3>
+                    <p className="mt-2 text-foreground-muted leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -153,23 +153,23 @@ export default function HomePage() {
 
         {/* CTA */}
         <section className="px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl rounded-3xl bg-slate-900 px-8 py-16 text-center">
-            <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl">
+          <div className="mx-auto max-w-3xl rounded-ui-lg border border-border bg-background-alt px-8 py-16 text-center shadow-soft">
+            <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl leading-headline">
               Ready to build elastic employment infrastructure?
             </h2>
-            <p className="mt-4 text-slate-300">
-              Join employers and workers who've moved beyond binary.
+            <p className="mt-4 text-foreground-muted leading-relaxed">
+              Join employers and workers who&apos;ve moved beyond binary.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/pricing"
-                className="rounded-lg bg-accent-light px-6 py-3 text-base font-medium text-slate-900 transition hover:bg-teal-300"
+                className="rounded-ui bg-accent px-6 py-3 text-base font-medium text-white transition hover:bg-accent-dark shadow-subtle"
               >
                 See plans & pricing
               </Link>
               <Link
                 href="/case-studies"
-                className="rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-white transition hover:border-slate-500 hover:bg-slate-800"
+                className="rounded-ui border border-border px-6 py-3 text-base font-medium text-foreground transition hover:border-foreground-subtle hover:bg-surface"
               >
                 Read case studies
               </Link>

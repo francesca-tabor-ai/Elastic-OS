@@ -26,6 +26,9 @@ docker-compose up -d postgres
 # Run migrations
 pnpm db:migrate
 
+# Seed marketplace apps (optional)
+pnpm db:seed
+
 # Generate Prisma client
 pnpm db:generate
 
@@ -57,6 +60,7 @@ elastic-os/
 
 ## Phase 0 Features
 
+- **App Marketplace**: Browse and install integrations and workflows at `/marketplace`—affiliation export, LinkedIn sync, Xero roster sync, engagement reports, Slack notifications, verification audit trail.
 - **Identity**: Worker, Employer, Government account types; MFA; verification stubs (GOV.UK, Companies House)
 - **Employment Affiliation Ledger**: Append-only worker–employer records with engagement intensity
 - **Worker Profile**: Skills, certifications, portfolio

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ChatWidget } from "@/components/chat/ChatWidget";
+import { Providers } from "@/components/Providers";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -16,9 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased min-h-screen flex flex-col text-foreground bg-background leading-body">
-        <div className="flex-1 flex flex-col">{children}</div>
-        <Footer />
-        <ChatWidget />
+        <Providers>
+          <div className="flex-1 flex flex-col">{children}</div>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

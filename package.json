@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
+    "build": "npm run build --workspace=@elastic-os/web",
+    "dev": "npm run dev --workspace=@elastic-os/web",
     "lint": "turbo run lint",
     "db:generate": "prisma generate --schema=packages/db/prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema=packages/db/prisma/schema.prisma",
     "db:push": "prisma db push --schema=packages/db/prisma/schema.prisma",
-    "db:studio": "prisma studio --schema=packages/db/prisma/schema.prisma"
+    "db:studio": "prisma studio --schema=packages/db/prisma/schema.prisma",
+    "db:seed": "pnpm --filter @elastic-os/db run db:seed"
   },
   "devDependencies": {
     "turbo": "^2.3.0"

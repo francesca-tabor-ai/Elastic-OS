@@ -33,12 +33,11 @@ export async function POST(req: Request) {
 
   const intensity = engagementIntensity ?? (recordType === "TERMINATED" ? 0 : 1);
 
-  // RBAC: Employer can manage their roster; Worker cannot create affiliations for themselves
-  // (affiliations are employer-initiated). Government could create for any.
-  if (session.user.role === "EMPLOYER" && session.user.employerId !== employerId) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // RBAC: Employer can create for their org; Government for any; Worker cannot create
+  if (session.user.role === "WORKER") {
+    return NextResponse.json({ error: "Workers cannot create affiliations" }, { status: 403 });
   }
-  if (session.user.role === "WORKER" && session.user.workerId !== workerId) {
+  if (session.user.role === "EMPLOYER" && session.user.employerId !== employerId) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
