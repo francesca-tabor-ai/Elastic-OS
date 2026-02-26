@@ -12,17 +12,31 @@ export default async function EmployerRosterPage() {
     redirect("/login");
   }
 
-  const roster = await prisma.workforceRoster.findMany({
-    where: { employerId: session.user.employerId },
-    include: {
-      worker: {
-        include: { user: true, workerProfile: true },
+  const [roster, snapshots, departments] = await Promise.all([
+    prisma.workforceRoster.findMany({
+      where: { employerId: session.user.employerId },
+      include: {
+        worker: {
+          include: { user: true, workerProfile: true },
+        },
+        department: true,
+        jobRole: true,
+        contractType: true,
+        salaryBand: true,
       },
-      department: true,
-      jobRole: true,
-      contractType: true,
-    },
-  });
+    }),
+    prisma.affiliationSnapshot.findMany({
+      where: { employerId: session.user.employerId },
+    }),
+    prisma.department.findMany({
+      where: { employerId: session.user.employerId },
+      orderBy: { name: "asc" },
+    }),
+  ]);
+
+  const snapshotByWorker = Object.fromEntries(
+    snapshots.map((s) => [s.workerId, s])
+  );
 
   return (
     <main className="min-h-screen p-8">
@@ -40,6 +54,8 @@ export default async function EmployerRosterPage() {
         <EmployerRosterClient
           employerId={session.user.employerId}
           initialRoster={roster}
+          snapshotByWorker={snapshotByWorker}
+          departments={departments}
         />
       </div>
     </main>

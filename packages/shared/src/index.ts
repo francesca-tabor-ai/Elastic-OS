@@ -17,3 +17,16 @@ export const MAX_ENGAGEMENT_INTENSITY = 1;
 // Proficiency scale for skills (1-5)
 export const MIN_PROFICIENCY = 1;
 export const MAX_PROFICIENCY = 5;
+
+// Phase 1: Affiliation status and benefits
+export const BENEFITS_STATUS = ["FULL", "PRO_RATED", "MINIMAL", "NONE"] as const;
+export type BenefitsStatusType = (typeof BENEFITS_STATUS)[number];
+
+export const AFFILIATION_STATUS = [
+  "FULL_ENGAGEMENT",
+  "PARTIAL_ENGAGEMENT",
+  "ELASTIC_RETENTION",
+  "MINIMAL_AFFILIATION",
+  "FULLY_DETACHED",
+] as const;
+export type AffiliationStatusType = (typeof AFFILIATION_STATUS)[number];

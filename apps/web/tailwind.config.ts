@@ -9,26 +9,26 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["'Source Sans 3'", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["'Source Sans 3'", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ["'DM Sans'", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["'DM Sans'", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
         foreground: {
-          DEFAULT: "#0a0a0a",
-          muted: "#525252",
-          subtle: "#737373",
+          DEFAULT: "#0f172a",
+          muted: "#475569",
+          subtle: "#64748b",
         },
         background: {
           DEFAULT: "#ffffff",
-          alt: "#fafafa",
+          alt: "#f8fafc",
         },
         border: {
-          DEFAULT: "#e5e5e5",
-          subtle: "#f5f5f5",
+          DEFAULT: "#e2e8f0",
+          subtle: "#f1f5f9",
         },
         surface: {
-          DEFAULT: "#f5f5f5",
-          hover: "#ebebeb",
+          DEFAULT: "#f1f5f9",
+          hover: "#e2e8f0",
         },
         accent: {
           DEFAULT: "#14b8a6",

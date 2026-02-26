@@ -50,20 +50,36 @@ export default async function DashboardPage() {
             App Marketplace
           </Link>
           {session.user.role === "WORKER" && (
-            <Link
-              href="/worker/profile"
-              className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
-            >
-              Worker Profile
-            </Link>
+            <>
+              <Link
+                href="/worker/elastic"
+                className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
+              >
+                Elastic Dashboard
+              </Link>
+              <Link
+                href="/worker/profile"
+                className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
+              >
+                Worker Profile
+              </Link>
+            </>
           )}
           {session.user.role === "EMPLOYER" && (
-            <Link
-              href="/employer/roster"
-              className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
-            >
-              Workforce Roster
-            </Link>
+            <>
+              <Link
+                href="/employer/dashboard"
+                className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
+              >
+                Elastic Workforce Dashboard
+              </Link>
+              <Link
+                href="/employer/roster"
+                className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
+              >
+                Workforce Roster
+              </Link>
+            </>
           )}
           {session.user.role === "ADMIN" && (
             <Link

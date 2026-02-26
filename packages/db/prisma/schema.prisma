@@ -150,6 +150,21 @@ enum AffiliationRecordType {
   REACTIVATED
 }
 
+enum BenefitsStatus {
+  FULL
+  PRO_RATED
+  MINIMAL
+  NONE
+}
+
+enum AffiliationStatus {
+  FULL_ENGAGEMENT
+  PARTIAL_ENGAGEMENT
+  ELASTIC_RETENTION
+  MINIMAL_AFFILIATION
+  FULLY_DETACHED
+}
+
 model AffiliationRecord {
   id                   String               @id @default(cuid())
   workerId             String               @map("worker_id")
@@ -173,12 +188,14 @@ model AffiliationRecord {
 }
 
 model AffiliationSnapshot {
-  id                       String   @id @default(cuid())
-  workerId                 String   @map("worker_id")
-  employerId               String   @map("employer_id")
-  engagementIntensity      Decimal  @map("engagement_intensity") @db.Decimal(5, 4)
-  affiliationContinuityScore Decimal? @map("affiliation_continuity_score") @db.Decimal(5, 4)
-  updatedAt                DateTime @updatedAt @map("updated_at")
+  id                       String         @id @default(cuid())
+  workerId                 String         @map("worker_id")
+  employerId               String         @map("employer_id")
+  engagementIntensity      Decimal        @map("engagement_intensity") @db.Decimal(5, 4)
+  affiliationContinuityScore Decimal?     @map("affiliation_continuity_score") @db.Decimal(5, 4)
+  adjustedSalary           Decimal?       @map("adjusted_salary") @db.Decimal(12, 2)
+  benefitsStatus           BenefitsStatus? @map("benefits_status")
+  updatedAt                DateTime       @updatedAt @map("updated_at")
 
   worker   Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
   employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
@@ -321,8 +338,9 @@ model SalaryBand {
   currency   String   @default("GBP") @db.VarChar(3)
   createdAt  DateTime @default(now()) @map("created_at")
 
-  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
-  role     JobRole? @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  employer    Employer         @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  role        JobRole?         @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  rosterEntries WorkforceRoster[]
 
   @@map("salary_bands")
 }
@@ -340,13 +358,14 @@ model ContractType {
 }
 
 model WorkforceRoster {
-  id             String   @id @default(cuid())
-  employerId     String   @map("employer_id")
+  id             String    @id @default(cuid())
+  employerId     String    @map("employer_id")
   workerId       String   @map("worker_id")
   departmentId   String?  @map("department_id")
   jobRoleId      String?  @map("job_role_id")
   contractTypeId String?  @map("contract_type_id")
   salaryBandId   String?  @map("salary_band_id")
+  baseSalary     Decimal? @map("base_salary") @db.Decimal(12, 2)
   importedAt     DateTime @default(now()) @map("imported_at")
 
   employer     Employer     @relation(fields: [employerId], references: [id], onDelete: Cascade)
@@ -354,6 +373,7 @@ model WorkforceRoster {
   department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   jobRole      JobRole?     @relation(fields: [jobRoleId], references: [id], onDelete: SetNull)
   contractType ContractType? @relation(fields: [contractTypeId], references: [id], onDelete: SetNull)
+  salaryBand   SalaryBand? @relation(fields: [salaryBandId], references: [id], onDelete: SetNull)
 
   @@unique([employerId, workerId])
   @@map("workforce_roster")

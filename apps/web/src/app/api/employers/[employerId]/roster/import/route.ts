@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@elastic-os/db";
 import { createOrAdjustAffiliation } from "@/lib/ledger";
-import { AFFILIATION_RECORD_TYPES } from "@elastic-os/shared";
+import { Decimal } from "@prisma/client/runtime/library";
 
 function parseCSV(text: string): string[][] {
   const lines = text.trim().split(/\r?\n/);
@@ -66,6 +66,9 @@ export async function POST(
   const engagementIdx = header.findIndex(
     (h) => h === "engagement" || h === "engagementintensity"
   );
+  const baseSalaryIdx = header.findIndex(
+    (h) => h === "basesalary" || h === "base_salary" || h === "salary"
+  );
 
   if (workerIdIdx === -1) {
     return NextResponse.json(
@@ -80,9 +83,12 @@ export async function POST(
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
     const workerId = row[workerIdIdx]?.trim();
-    const engagement = engagementIdx >= 0
-      ? parseFloat(row[engagementIdx] ?? "1")
-      : 1;
+    const engagement =
+      engagementIdx >= 0 ? parseFloat(row[engagementIdx] ?? "1") : 1;
+    const baseSalary =
+      baseSalaryIdx >= 0 && row[baseSalaryIdx]
+        ? parseFloat(row[baseSalaryIdx]?.trim() ?? "")
+        : null;
 
     if (!workerId) {
       errors.push(`Row ${i + 1}: missing workerId`);
@@ -99,19 +105,25 @@ export async function POST(
     }
 
     try {
+      const baseSalaryVal =
+        baseSalary != null && !isNaN(baseSalary) ? new Decimal(baseSalary) : null;
       await prisma.workforceRoster.upsert({
         where: {
           employerId_workerId: { employerId, workerId },
         },
-        create: { employerId, workerId },
-        update: {},
+        create: {
+          employerId,
+          workerId,
+          ...(baseSalaryVal && { baseSalary: baseSalaryVal }),
+        },
+        update: baseSalaryVal ? { baseSalary: baseSalaryVal } : {},
       });
 
       await createOrAdjustAffiliation({
         workerId,
         employerId,
         engagementIntensity: Math.min(1, Math.max(0, engagement)),
-        recordType: AFFILIATION_RECORD_TYPES[0],
+        recordType: "ACTIVE",
         createdBy: session.user.id,
         metadata: { source: "csv_import", row: i + 1 },
       });

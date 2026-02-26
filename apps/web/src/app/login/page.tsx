@@ -46,7 +46,7 @@ function LoginForm() {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold">Log in to ElasticOS</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-foreground-muted">
             Enter your credentials to continue
           </p>
         </div>
@@ -68,7 +68,7 @@ function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
+              className="w-full px-4 py-2 border border-border rounded-ui bg-background"
               placeholder="you@example.com"
             />
           </div>
@@ -83,20 +83,20 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
+              className="w-full px-4 py-2 border border-border rounded-ui bg-background"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 px-4 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+            className="w-full py-2 px-4 rounded-ui bg-foreground text-background font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-center text-sm text-foreground-muted">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="underline hover:no-underline">
             Register
