@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: elastic-os-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: elasticos
+      POSTGRES_PASSWORD: elasticos_dev
+      POSTGRES_DB: elastic_os
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Optional: Redis for sessions/cache (Phase 1+)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: elastic-os-redis
+  #   ports:
+  #     - "6379:6379"
+
+volumes:
+  postgres_data:

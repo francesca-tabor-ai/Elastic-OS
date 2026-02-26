@@ -1,0 +1,412 @@
+// ElasticOS Phase 0 - Database Schema
+// Stage 1: Identity + Stage 2: Ledger + Stage 3: Worker + Stage 4: Employer
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============ Stage 1: Identity ============
+enum UserRole {
+  WORKER
+  EMPLOYER
+  GOVERNMENT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  passwordHash  String?   @map("password_hash")
+  role          UserRole
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  accounts      Account[]
+  sessions      Session[]
+  worker        Worker?
+  employer      Employer?
+  createdLedgerRecords AffiliationRecord[] @relation("CreatedBy")
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token     String? @db.Text
+  expires_at       Int?
+  token_type       String?
+  scope            String?
+  id_token         String? @db.Text
+  session_state    String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+  @@map("verification_tokens")
+}
+
+model MfaSecret {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  secret    String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("mfa_secrets")
+}
+
+model Worker {
+  id                String    @id @default(cuid())
+  userId            String    @unique @map("user_id")
+  govtIdVerifiedAt  DateTime? @map("govt_id_verified_at")
+  mfaEnabled       Boolean   @default(false) @map("mfa_enabled")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workerProfile     WorkerProfile?
+  workerSkills      WorkerSkill[]
+  certifications    Certification[]
+  portfolioItems    PortfolioItem[]
+  employerReferences EmployerReference[]
+  affiliationRecords AffiliationRecord[]
+  affiliationSnapshots AffiliationSnapshot[]
+  workforceRoster   WorkforceRoster[]
+
+  @@map("workers")
+}
+
+model Employer {
+  id                    String    @id @default(cuid())
+  userId                String    @unique @map("user_id")
+  legalEntityVerifiedAt DateTime? @map("legal_entity_verified_at")
+  companiesHouseNumber  String?   @map("companies_house_number")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  employerProfile       EmployerProfile?
+  departments           Department[]
+  jobRoles              JobRole[]
+  salaryBands           SalaryBand[]
+  contractTypes         ContractType[]
+  affiliationRecords    AffiliationRecord[]
+  affiliationSnapshots  AffiliationSnapshot[]
+  workforceRoster       WorkforceRoster[]
+  employerReferences    EmployerReference[]
+
+  @@map("employers")
+}
+
+model VerificationLog {
+  id          String   @id @default(cuid())
+  userId      String?  @map("user_id")
+  entityType  String   @map("entity_type")
+  entityId    String?  @map("entity_id")
+  success     Boolean
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("verification_logs")
+}
+
+// ============ Stage 2: Employment Affiliation Ledger ============
+enum AffiliationRecordType {
+  ACTIVE
+  ADJUSTED
+  TERMINATED
+  REACTIVATED
+}
+
+model AffiliationRecord {
+  id                   String               @id @default(cuid())
+  workerId             String               @map("worker_id")
+  employerId           String               @map("employer_id")
+  engagementIntensity  Decimal              @map("engagement_intensity") @db.Decimal(5, 4)
+  effectiveFrom       DateTime             @map("effective_from")
+  effectiveTo         DateTime?            @map("effective_to")
+  recordType          AffiliationRecordType @map("record_type")
+  createdAt            DateTime             @default(now()) @map("created_at")
+  createdBy            String?              @map("created_by")
+  metadata             Json?
+
+  worker               Worker               @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  employer             Employer             @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  createdByUser        User?                @relation("CreatedBy", fields: [createdBy], references: [id])
+
+  @@index([workerId, employerId])
+  @@index([workerId])
+  @@index([employerId])
+  @@map("affiliation_records")
+}
+
+model AffiliationSnapshot {
+  id                       String   @id @default(cuid())
+  workerId                 String   @map("worker_id")
+  employerId               String   @map("employer_id")
+  engagementIntensity      Decimal  @map("engagement_intensity") @db.Decimal(5, 4)
+  affiliationContinuityScore Decimal? @map("affiliation_continuity_score") @db.Decimal(5, 4)
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  worker   Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@unique([workerId, employerId])
+  @@map("affiliation_snapshots")
+}
+
+// ============ Stage 3: Worker Profile ============
+model WorkerProfile {
+  id        String   @id @default(cuid())
+  workerId  String   @unique @map("worker_id")
+  headline  String?  @db.VarChar(200)
+  bio       String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  worker Worker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@map("worker_profiles")
+}
+
+model WorkerSkill {
+  id                    String   @id @default(cuid())
+  workerId              String   @map("worker_id")
+  skillName             String   @map("skill_name") @db.VarChar(100)
+  proficiency           Int
+  verifiedByEmployerId  String?  @map("verified_by_employer_id")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  worker Worker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@unique([workerId, skillName])
+  @@map("worker_skills")
+}
+
+model Certification {
+  id          String    @id @default(cuid())
+  workerId    String    @map("worker_id")
+  name        String    @db.VarChar(200)
+  issuer      String    @db.VarChar(200)
+  issuedAt    DateTime  @map("issued_at")
+  expiryAt    DateTime? @map("expiry_at")
+  documentUrl String?   @map("document_url") @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  worker Worker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@map("certifications")
+}
+
+model PortfolioItem {
+  id          String   @id @default(cuid())
+  workerId    String   @map("worker_id")
+  title       String   @db.VarChar(200)
+  description String?  @db.Text
+  url         String?  @db.Text
+  fileUrl     String?  @map("file_url") @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  worker Worker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@map("portfolio_items")
+}
+
+enum ReferenceStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model EmployerReference {
+  id           String         @id @default(cuid())
+  workerId     String         @map("worker_id")
+  employerId   String         @map("employer_id")
+  referenceText String        @map("reference_text") @db.Text
+  verifiedAt   DateTime?      @map("verified_at")
+  status       ReferenceStatus @default(PENDING)
+  createdAt    DateTime       @default(now()) @map("created_at")
+
+  worker   Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@unique([workerId, employerId])
+  @@map("employer_references")
+}
+
+// ============ Stage 4: Employer Workforce Registry ============
+model EmployerProfile {
+  id          String   @id @default(cuid())
+  employerId  String   @unique @map("employer_id")
+  companyName String   @map("company_name") @db.VarChar(200)
+  industry    String?  @db.VarChar(100)
+  size        String?  @db.VarChar(50)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@map("employer_profiles")
+}
+
+model Department {
+  id                  String    @id @default(cuid())
+  employerId          String    @map("employer_id")
+  name                String    @db.VarChar(100)
+  parentDepartmentId  String?   @map("parent_department_id")
+  createdAt           DateTime  @default(now()) @map("created_at")
+
+  employer        Employer        @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  parentDepartment Department?    @relation("DepartmentHierarchy", fields: [parentDepartmentId], references: [id])
+  childDepartments Department[]   @relation("DepartmentHierarchy")
+  jobRoles        JobRole[]
+  rosterEntries   WorkforceRoster[]
+
+  @@map("departments")
+}
+
+model JobRole {
+  id           String   @id @default(cuid())
+  employerId   String   @map("employer_id")
+  title        String   @db.VarChar(100)
+  departmentId String?  @map("department_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  employer      Employer        @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  department    Department?     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  salaryBands   SalaryBand[]
+  rosterEntries WorkforceRoster[]
+
+  @@map("job_roles")
+}
+
+model SalaryBand {
+  id         String   @id @default(cuid())
+  employerId String   @map("employer_id")
+  roleId     String?  @map("role_id")
+  minAmount  Decimal  @map("min_amount") @db.Decimal(12, 2)
+  maxAmount  Decimal  @map("max_amount") @db.Decimal(12, 2)
+  currency   String   @default("GBP") @db.VarChar(3)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  role     JobRole? @relation(fields: [roleId], references: [id], onDelete: SetNull)
+
+  @@map("salary_bands")
+}
+
+model ContractType {
+  id          String   @id @default(cuid())
+  employerId  String   @map("employer_id")
+  name        String   @db.VarChar(50)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  rosterEntries WorkforceRoster[]
+
+  @@map("contract_types")
+}
+
+model WorkforceRoster {
+  id             String   @id @default(cuid())
+  employerId     String   @map("employer_id")
+  workerId       String   @map("worker_id")
+  departmentId   String?  @map("department_id")
+  jobRoleId      String?  @map("job_role_id")
+  contractTypeId String?  @map("contract_type_id")
+  salaryBandId   String?  @map("salary_band_id")
+  importedAt     DateTime @default(now()) @map("imported_at")
+
+  employer     Employer     @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  worker       Worker       @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  jobRole      JobRole?     @relation(fields: [jobRoleId], references: [id], onDelete: SetNull)
+  contractType ContractType? @relation(fields: [contractTypeId], references: [id], onDelete: SetNull)
+
+  @@unique([employerId, workerId])
+  @@map("workforce_roster")
+}
+
+// ============ App Marketplace ============
+enum AppCategory {
+  WORKFLOW
+  INTEGRATION
+  REPORTING
+  COMPLIANCE
+  PRODUCTIVITY
+}
+
+enum AppScope {
+  WORKER
+  EMPLOYER
+  BOTH
+}
+
+model App {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String   @db.VarChar(100)
+  description   String   @db.Text
+  longDescription String? @map("long_description") @db.Text
+  icon          String?  @db.VarChar(10)
+  iconUrl       String?  @map("icon_url") @db.Text
+  category      AppCategory
+  scope         AppScope @default(BOTH)
+  vendor        String   @default("ElasticOS") @db.VarChar(100)
+  isBuiltIn     Boolean  @default(true) @map("is_built_in")
+  scopes        String[] @default([])
+  installUrl    String?  @map("install_url") @db.Text
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  installations AppInstallation[]
+
+  @@map("apps")
+}
+
+model AppInstallation {
+  id          String   @id @default(cuid())
+  appId       String   @map("app_id")
+  userId      String   @map("user_id")
+  entityType  String   @map("entity_type")
+  entityId    String   @map("entity_id")
+  config      Json?
+  installedAt DateTime @default(now()) @map("installed_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  app App @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([appId, entityType, entityId])
+  @@map("app_installations")
+}
