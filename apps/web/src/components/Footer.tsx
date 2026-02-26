@@ -9,6 +9,12 @@ export function Footer() {
         </span>
         <nav className="flex items-center gap-6">
           <Link
+            href="/contact"
+            className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-dark)] transition-colors"
+          >
+            Contact
+          </Link>
+          <Link
             href="/e-book"
             className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-dark)] transition-colors"
           >

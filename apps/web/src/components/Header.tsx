@@ -29,6 +29,12 @@ export function Header() {
             Case Studies
           </Link>
           <Link
+            href="/contact"
+            className="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+          >
+            Contact
+          </Link>
+          <Link
             href="/marketplace"
             className="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
           >

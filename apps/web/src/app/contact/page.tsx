@@ -56,7 +56,7 @@ export default function ContactPage() {
             Contact us
           </h1>
           <p className="mt-2 text-slate-600 dark:text-slate-400">
-            Customer support, bug reports, or general inquiries. We&apos;ll reply to{" "}
+            Customer support, bug reports, or general inquiries. All submissions are sent to{" "}
             <span className="font-medium text-accent">info@francescatabor.com</span>.
           </p>
 

@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ["'Source Sans 3'", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["'Source Sans 3'", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
         foreground: {
@@ -30,6 +31,9 @@ const config: Config = {
           hover: "#ebebeb",
         },
         accent: {
+          DEFAULT: "#14b8a6",
+          light: "#5eead4",
+          dark: "#0d9488",
           yellow: "#facc15",
           green: "#22c55e",
           turquoise: "#14b8a6",

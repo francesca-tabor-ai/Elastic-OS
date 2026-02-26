@@ -27,6 +27,8 @@ const ENTITIES = [
   { name: "SalaryBand", table: "salary_bands", description: "Min/max pay, currency" },
   { name: "ContractType", table: "contract_types", description: "Contract types (including elastic)" },
   { name: "WorkforceRoster", table: "workforce_roster", description: "Worker–employer roster mapping" },
+  { name: "App", table: "apps", description: "Marketplace app catalog (workflows, integrations)" },
+  { name: "AppInstallation", table: "app_installations", description: "User/employer app installations" },
 ];
 
 const ENDPOINTS = [
@@ -37,6 +39,11 @@ const ENDPOINTS = [
   { method: "POST", path: "/api/verify/gov-id", crud: "Update", auth: true, description: "Stub GOV.UK Verify — marks worker govtIdVerifiedAt" },
   { method: "POST", path: "/api/verify/employer", crud: "Update", auth: true, description: "Stub Companies House — verify employer legal entity" },
   { method: "*", path: "/api/auth/[...nextauth]", crud: "Read/Update", auth: "Session", description: "NextAuth: signin, signout, session, callbacks" },
+  { method: "GET", path: "/api/apps", crud: "Read", auth: false, description: "List marketplace apps (optional ?category=&scope=)" },
+  { method: "GET", path: "/api/apps/[slug]", crud: "Read", auth: false, description: "Get single app by slug" },
+  { method: "GET", path: "/api/apps/installed", crud: "Read", auth: true, description: "List current user's installed apps" },
+  { method: "POST", path: "/api/apps/[slug]/install", crud: "Create", auth: true, description: "Install app for worker or employer" },
+  { method: "DELETE", path: "/api/apps/[slug]/install", crud: "Delete", auth: true, description: "Uninstall app" },
 ];
 
 export default function ApiDocsPage() {

@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased min-h-screen flex flex-col">
+      <body className="font-sans antialiased min-h-screen flex flex-col text-foreground bg-background leading-body">
         <div className="flex-1 flex flex-col">{children}</div>
         <Footer />
         <ChatWidget />

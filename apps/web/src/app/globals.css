@@ -42,6 +42,10 @@
   --color-accent-turquoise: #14b8a6;
   --color-accent-blue: #3b82f6;
 
+  /* Single accent for links, CTAs (maps to Tailwind accent) */
+  --accent: #14b8a6;
+  --accent-dark: #0d9488;
+
   /* Spacing & rhythm */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;

@@ -53,13 +53,18 @@ export default function MarketplacePage() {
   const [uninstalling, setUninstalling] = useState<string | null>(null);
   const [filter, setFilter] = useState<AppCategory | "">("");
   const [signedIn, setSignedIn] = useState(false);
+  const [userContext, setUserContext] = useState<{
+    hasWorker: boolean;
+    hasEmployer: boolean;
+  } | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [appsRes, installedRes] = await Promise.all([
+        const [appsRes, installedRes, meRes] = await Promise.all([
           fetch("/api/apps"),
           fetch("/api/apps/installed").catch(() => null),
+          fetch("/api/auth/me").catch(() => null),
         ]);
 
         if (appsRes.ok) {
@@ -70,7 +75,15 @@ export default function MarketplacePage() {
         if (installedRes?.ok) {
           const data = await installedRes.json();
           setInstalled(data);
+        }
+
+        if (meRes?.ok) {
+          const me = await meRes.json();
           setSignedIn(true);
+          setUserContext({
+            hasWorker: !!me.workerId,
+            hasEmployer: !!me.employerId,
+          });
         }
       } catch (e) {
         console.error(e);
@@ -80,6 +93,13 @@ export default function MarketplacePage() {
     }
     fetchData();
   }, []);
+
+  const getDefaultEntityType = (app: App): "worker" | "employer" => {
+    if (app.scope === "EMPLOYER") return "employer";
+    if (app.scope === "WORKER") return "worker";
+    if (userContext?.hasEmployer) return "employer";
+    return "worker";
+  };
 
   const installApp = async (slug: string, entityType: "worker" | "employer") => {
     setInstalling(slug);
@@ -272,10 +292,7 @@ export default function MarketplacePage() {
                           ) : (
                             <button
                               onClick={() =>
-                                installApp(
-                                  app.slug,
-                                  app.scope === "EMPLOYER" ? "employer" : "worker"
-                                )
+                                installApp(app.slug, getDefaultEntityType(app))
                               }
                               disabled={installing === app.slug}
                               className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-dark disabled:opacity-70"
