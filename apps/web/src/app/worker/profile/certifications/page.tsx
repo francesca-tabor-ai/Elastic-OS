@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
-export default function AddCertificationPage() {
+function AddCertificationForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const workerId = searchParams.get("workerId");
@@ -102,5 +103,13 @@ export default function AddCertificationPage() {
         Back
       </Link>
     </main>
+  );
+}
+
+export default function AddCertificationPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen p-8"><p>Loading...</p></main>}>
+      <AddCertificationForm />
+    </Suspense>
   );
 }

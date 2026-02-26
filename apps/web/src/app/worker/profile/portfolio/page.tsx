@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
-export default function AddPortfolioPage() {
+function AddPortfolioForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const workerId = searchParams.get("workerId");
@@ -90,5 +91,13 @@ export default function AddPortfolioPage() {
         Back
       </Link>
     </main>
+  );
+}
+
+export default function AddPortfolioPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen p-8"><p>Loading...</p></main>}>
+      <AddPortfolioForm />
+    </Suspense>
   );
 }

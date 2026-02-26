@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
-export default function AddSkillPage() {
+function AddSkillForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const workerId = searchParams.get("workerId");
@@ -67,5 +68,13 @@ export default function AddSkillPage() {
         Back
       </Link>
     </main>
+  );
+}
+
+export default function AddSkillPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen p-8"><p>Loading...</p></main>}>
+      <AddSkillForm />
+    </Suspense>
   );
 }
