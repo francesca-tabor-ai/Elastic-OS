@@ -58,6 +58,12 @@ export default async function DashboardPage() {
                 Elastic Dashboard
               </Link>
               <Link
+                href="/opportunities"
+                className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
+              >
+                Elastic Opportunities
+              </Link>
+              <Link
                 href="/worker/profile"
                 className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
               >
@@ -74,12 +80,26 @@ export default async function DashboardPage() {
                 Elastic Workforce Dashboard
               </Link>
               <Link
+                href="/employer/opportunities"
+                className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
+              >
+                Post Opportunities
+              </Link>
+              <Link
                 href="/employer/roster"
                 className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
               >
                 Workforce Roster
               </Link>
             </>
+          )}
+          {(session.user.role === "GOVERNMENT" || session.user.role === "ADMIN") && (
+            <Link
+              href="/government/dashboard"
+              className="p-4 rounded-ui border border-border dark:border-border hover:bg-surface dark:hover:bg-border/50"
+            >
+              Government Dashboard
+            </Link>
           )}
           {session.user.role === "ADMIN" && (
             <Link

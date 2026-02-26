@@ -85,6 +85,7 @@ export default async function EmployerDashboardPage() {
         </div>
 
         <EmployerDashboardClient
+          employerId={employerId}
           engagementDistribution={{
             fullCount,
             partialCount,

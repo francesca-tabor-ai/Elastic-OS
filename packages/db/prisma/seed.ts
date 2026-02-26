@@ -40,6 +40,25 @@ async function main() {
     console.log(`Created ${u.role}: ${u.email}`);
   }
 
+  // Phase 2: Seed skill metadata for depreciation predictor
+  const skillMetadata = [
+    { skillName: "javascript", halfLifeMonths: 36, demandTrend: "STABLE", relatedSkills: ["typescript", "react", "node.js"] },
+    { skillName: "typescript", halfLifeMonths: 48, demandTrend: "GROWING", relatedSkills: ["javascript", "react", "node.js"] },
+    { skillName: "react", halfLifeMonths: 30, demandTrend: "STABLE", relatedSkills: ["next.js", "vue", "typescript"] },
+    { skillName: "python", halfLifeMonths: 48, demandTrend: "GROWING", relatedSkills: ["fastapi", "pytest", "machine learning"] },
+    { skillName: "sql", halfLifeMonths: 60, demandTrend: "STABLE", relatedSkills: ["postgresql", "mongodb", "data modeling"] },
+    { skillName: "aws", halfLifeMonths: 24, demandTrend: "GROWING", relatedSkills: ["kubernetes", "terraform", "cloud architecture"] },
+    { skillName: "kubernetes", halfLifeMonths: 36, demandTrend: "GROWING", relatedSkills: ["docker", "helm", "aws"] },
+  ];
+  for (const s of skillMetadata) {
+    await prisma.skillMetadata.upsert({
+      where: { skillName: s.skillName },
+      create: s,
+      update: { halfLifeMonths: s.halfLifeMonths, demandTrend: s.demandTrend, relatedSkills: s.relatedSkills },
+    });
+  }
+  console.log(`Seeded ${skillMetadata.length} skill metadata entries`);
+
   console.log("\nDemo users ready. See DEMO_CREDENTIALS.md for login details.");
 }
 

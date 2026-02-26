@@ -104,6 +104,13 @@ model Worker {
   affiliationRecords AffiliationRecord[]
   affiliationSnapshots AffiliationSnapshot[]
   workforceRoster   WorkforceRoster[]
+  humanCapitalScores HumanCapitalScore[]
+  reactivationPredictions ReactivationPrediction[]
+  workerSkillDecays WorkerSkillDecay[]
+  opportunityApplications OpportunityApplication[]
+  workerAvailability WorkerAvailability?
+  subsidyAllocations SubsidyAllocation[]
+  elasticityContracts ElasticityContract[]
 
   @@map("workers")
 }
@@ -126,6 +133,14 @@ model Employer {
   affiliationSnapshots  AffiliationSnapshot[]
   workforceRoster       WorkforceRoster[]
   employerReferences    EmployerReference[]
+  humanCapitalScores    HumanCapitalScore[]
+  reactivationPredictions ReactivationPrediction[]
+  employerForecasts     EmployerForecast[]
+  optimisationRuns     OptimisationRun[]
+  opportunities        Opportunity[]
+  subsidyAllocations   SubsidyAllocation[]
+  humanCapitalReports  HumanCapitalReport[]
+  elasticityContracts  ElasticityContract[]
 
   @@map("employers")
 }
@@ -454,4 +469,252 @@ model AppDeveloperApplication {
   updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@map("app_developer_applications")
+}
+
+// ============ Phase 2: AI Elasticity Engine ============
+
+model HumanCapitalScore {
+  id               String   @id @default(cuid())
+  workerId         String   @map("worker_id")
+  employerId       String   @map("employer_id")
+  score            Decimal  @db.Decimal(5, 4)
+  skillRarityScore Decimal? @map("skill_rarity_score") @db.Decimal(5, 4)
+  replacementCost  Decimal? @map("replacement_cost") @db.Decimal(12, 2)
+  timeToReplace   Int?     @map("time_to_replace")
+  computedAt      DateTime @default(now()) @map("computed_at")
+
+  worker   Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@unique([workerId, employerId])
+  @@map("human_capital_scores")
+}
+
+model SkillMetadata {
+  id             String   @id @default(cuid())
+  skillName      String   @unique @map("skill_name") @db.VarChar(100)
+  halfLifeMonths Int?     @map("half_life_months")
+  demandTrend    String?  @map("demand_trend") @db.VarChar(20)
+  relatedSkills  Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("skill_metadata")
+}
+
+model WorkerSkillDecay {
+  id                 String   @id @default(cuid())
+  workerId           String   @map("worker_id")
+  skillName          String   @map("skill_name") @db.VarChar(100)
+  decayScore         Decimal  @map("decay_score") @db.Decimal(5, 4)
+  halfLifeMonths     Int?     @map("half_life_months")
+  upskillSuggestions Json?   @map("upskill_suggestions")
+  computedAt         DateTime @default(now()) @map("computed_at")
+
+  worker Worker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@unique([workerId, skillName])
+  @@map("worker_skill_decay")
+}
+
+model ReactivationPrediction {
+  id                  String   @id @default(cuid())
+  workerId            String   @map("worker_id")
+  employerId          String   @map("employer_id")
+  currentIntensity    Decimal  @map("current_intensity") @db.Decimal(5, 4)
+  probFullProd30Days Decimal? @map("prob_full_prod_30_days") @db.Decimal(5, 4)
+  probFullProd60Days Decimal? @map("prob_full_prod_60_days") @db.Decimal(5, 4)
+  probFullProd90Days Decimal? @map("prob_full_prod_90_days") @db.Decimal(5, 4)
+  computedAt          DateTime @default(now()) @map("computed_at")
+
+  worker   Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@unique([workerId, employerId])
+  @@map("reactivation_predictions")
+}
+
+model EmployerForecast {
+  id            String    @id @default(cuid())
+  employerId   String    @map("employer_id")
+  forecastType String    @map("forecast_type") @db.VarChar(50)
+  payload      Json
+  effectiveFrom DateTime @map("effective_from")
+  effectiveTo   DateTime? @map("effective_to")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@map("employer_forecasts")
+}
+
+model OptimisationRun {
+  id              String   @id @default(cuid())
+  employerId      String   @map("employer_id")
+  inputSnapshot   Json     @map("input_snapshot")
+  recommendations Json
+  status         String   @default("PENDING") @db.VarChar(20)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@map("optimisation_runs")
+}
+
+// ============ Phase 3: Multi-Employer Elastic Labour Market ============
+
+model Opportunity {
+  id                   String   @id @default(cuid())
+  employerId           String   @map("employer_id")
+  title                String   @db.VarChar(200)
+  description          String?  @db.Text
+  engagementIntensity   Decimal  @map("engagement_intensity") @db.Decimal(5, 4)
+  durationMonths       Int?     @map("duration_months")
+  requiredSkills       String[] @map("required_skills")
+  status               String   @default("OPEN") @db.VarChar(20)
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  employer      Employer                 @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  applications  OpportunityApplication[]
+
+  @@map("opportunities")
+}
+
+model OpportunityApplication {
+  id            String   @id @default(cuid())
+  opportunityId String   @map("opportunity_id")
+  workerId      String   @map("worker_id")
+  status        String   @default("PENDING") @db.VarChar(20)
+  message       String?  @db.Text
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  worker       Worker     @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@unique([opportunityId, workerId])
+  @@map("opportunity_applications")
+}
+
+model WorkerAvailability {
+  id                   String   @id @default(cuid())
+  workerId             String   @unique @map("worker_id")
+  maxTotalEngagement   Decimal  @map("max_total_engagement") @db.Decimal(5, 4)
+  openToOpportunities  Boolean  @default(true) @map("open_to_opportunities")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  worker Worker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@map("worker_availabilities")
+}
+
+model AffiliationCredential {
+  id            String   @id @default(cuid())
+  workerId      String   @map("worker_id")
+  recordId      String   @unique @map("record_id")
+  credentialJwt String   @map("credential_jwt") @db.Text
+  issuedAt      DateTime @default(now()) @map("issued_at")
+
+  @@map("affiliation_credentials")
+}
+
+// ============ Phase 4: Government & National Integration ============
+
+model NationalElasticIndexSnapshot {
+  id                     String   @id @default(cuid())
+  snapshotDate           DateTime @unique @map("snapshot_date")
+  engagementDistribution Json     @map("engagement_distribution")
+  elasticityRate         Decimal  @map("elasticity_rate") @db.Decimal(5, 4)
+  meanContinuity         Decimal  @map("mean_continuity") @db.Decimal(5, 4)
+  multiEmployerRate      Decimal? @map("multi_employer_rate") @db.Decimal(5, 4)
+  totalWorkers           Int      @map("total_workers")
+  totalEmployers         Int      @map("total_employers")
+  createdAt              DateTime @default(now()) @map("created_at")
+
+  @@map("national_elastic_index_snapshots")
+}
+
+model SubsidyPolicy {
+  id                     String   @id @default(cuid())
+  name                   String   @db.VarChar(200)
+  maxEngagementThreshold  Decimal  @map("max_engagement_threshold") @db.Decimal(5, 4)
+  minEngagementThreshold Decimal  @map("min_engagement_threshold") @db.Decimal(5, 4)
+  subsidyAmountPerWorker Decimal  @map("subsidy_amount_per_worker") @db.Decimal(12, 2)
+  totalBudget            Decimal? @map("total_budget") @db.Decimal(14, 2)
+  effectiveFrom          DateTime @map("effective_from")
+  effectiveTo            DateTime? @map("effective_to")
+  status                 String   @default("DRAFT") @db.VarChar(20)
+  createdAt              DateTime @default(now()) @map("created_at")
+
+  allocations SubsidyAllocation[]
+
+  @@map("subsidy_policies")
+}
+
+model SubsidyAllocation {
+  id                  String   @id @default(cuid())
+  policyId            String   @map("policy_id")
+  workerId            String   @map("worker_id")
+  employerId          String   @map("employer_id")
+  engagementIntensity Decimal  @map("engagement_intensity") @db.Decimal(5, 4)
+  subsidyAmount       Decimal  @map("subsidy_amount") @db.Decimal(12, 2)
+  periodStart         DateTime @map("period_start")
+  periodEnd           DateTime @map("period_end")
+  status              String   @default("PENDING") @db.VarChar(20)
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  policy   SubsidyPolicy @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  worker   Worker       @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  employer Employer     @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@map("subsidy_allocations")
+}
+
+model EarlyWarningAlert {
+  id             String    @id @default(cuid())
+  alertType      String    @map("alert_type") @db.VarChar(50)
+  severity       String    @db.VarChar(20)
+  summary        String    @db.Text
+  payload        Json
+  triggeredAt    DateTime  @default(now()) @map("triggered_at")
+  acknowledgedAt DateTime? @map("acknowledged_at")
+
+  @@map("early_warning_alerts")
+}
+
+// ============ Phase 5: Full Infrastructure Layer ============
+
+model HumanCapitalReport {
+  id              String   @id @default(cuid())
+  employerId      String   @map("employer_id")
+  reportDate      DateTime @map("report_date")
+  totalAssetValue Decimal  @map("total_asset_value") @db.Decimal(14, 2)
+  workerCount     Int      @map("worker_count")
+  payload         Json     // Detailed breakdown for accounting export
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@unique([employerId, reportDate])
+  @@map("human_capital_reports")
+}
+
+model ElasticityContract {
+  id                   String    @id @default(cuid())
+  workerId             String    @map("worker_id")
+  employerId           String    @map("employer_id")
+  minEngagement        Decimal   @map("min_engagement") @db.Decimal(5, 4)
+  maxEngagement        Decimal   @map("max_engagement") @db.Decimal(5, 4)
+  effectiveFrom        DateTime  @map("effective_from")
+  effectiveTo          DateTime?  @map("effective_to")
+  reactivationPriority Int       @default(0) @map("reactivation_priority")
+  status               String    @default("ACTIVE") @db.VarChar(20)
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  worker   Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  employer Employer @relation(fields: [employerId], references: [id], onDelete: Cascade)
+
+  @@map("elasticity_contracts")
 }
